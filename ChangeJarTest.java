@@ -213,15 +213,35 @@ public class ChangeJarTest {
         assertTrue(jar1.equals(jar2));
     }
 
+    //load mutate false
+    @Test
+            (expected = IllegalArgumentException.class)
+    public void testLoadFalse(){
+        ChangeJar jar1 = new ChangeJar(1,1,1,1);
+        ChangeJar jar2 = new ChangeJar(0,0,0,0);
+
+        jar1.save("file1");
+
+        ChangeJar.mutate(false);
+        jar2.load("file1");
+    }
+
     //testing dec
     @Test
-    public void testDec(){
-        ChangeJar jar1 = new ChangeJar(1,1,1,1);
+    public void testDec() {
+        ChangeJar.mutate(true);
+        ChangeJar jar1 = new ChangeJar(1, 1, 1, 1);
         jar1.dec();
         assertEquals(0, jar1.getPennies());
+    }
 
-       ChangeJar.mutate(false);
-        jar1 = new ChangeJar(1,1,1,1);
+
+    //testing dec for false mutate
+    @Test
+            (expected = IllegalArgumentException.class)
+    public void testFalseDec(){
+        ChangeJar.mutate(false);
+        ChangeJar jar1 = new ChangeJar(1,1,1,1);
         jar1.dec();
         assertEquals(1,jar1.getPennies());
         ChangeJar.mutate(true);
@@ -232,19 +252,26 @@ public class ChangeJarTest {
     @Test
             (expected = IllegalArgumentException.class)
     public void testDecZero(){
+        ChangeJar.mutate(true);
         ChangeJar jar = new ChangeJar(0,0,0,0);
         jar.dec();
     }
 
     //testing inc
     @Test
-    public void testInc(){
-        ChangeJar jar = new ChangeJar(0,0,0,0);
+    public void testInc() {
+        ChangeJar.mutate(true);
+        ChangeJar jar = new ChangeJar(0, 0, 0, 0);
         jar.inc();
         assertEquals(1, jar.getPennies());
+    }
 
+    //testing inc for false mutate
+    @Test
+            (expected = IllegalArgumentException.class)
+public void mutateFalseInc(){
         ChangeJar.mutate(false);
-        jar = new ChangeJar(1,1,1,1);
+        ChangeJar  jar = new ChangeJar(1,1,1,1);
         jar.inc();
         assertEquals(1,jar.getPennies());
         ChangeJar.mutate(true);
@@ -253,6 +280,7 @@ public class ChangeJarTest {
     //testing setting quarters
     @Test
     public void testSetQuarters(){
+        ChangeJar.mutate(true);
         ChangeJar jar = new ChangeJar(0,0,0,0);
         jar.setQuarters(5);
         assertEquals(5, jar.getQuarters());
@@ -261,6 +289,7 @@ public class ChangeJarTest {
     //testing getting quarters
     @Test
     public void testGetQuarters(){
+        ChangeJar.mutate(true);
         ChangeJar jar = new ChangeJar(3,0,0,0);
         assertEquals(3, jar.getQuarters());
     }
@@ -269,7 +298,8 @@ public class ChangeJarTest {
     @Test
             (expected = IllegalArgumentException.class)
     public void testNegQuarters(){
-
+        ChangeJar jar = new ChangeJar(1,1,1,1);
+        jar.setQuarters(-3);
     }
 
     //testing setting dimes
@@ -287,6 +317,14 @@ public class ChangeJarTest {
         assertEquals(3, jar.getDimes());
     }
 
+    //testing setting neg dimes
+    @Test
+            (expected = IllegalArgumentException.class)
+    public void testNegDimes(){
+        ChangeJar jar = new ChangeJar(1,1,1,1);
+        jar.setDimes(-3);
+    }
+
     //testing setting nickels
     @Test
     public void testSetNickels(){
@@ -302,6 +340,14 @@ public class ChangeJarTest {
         assertEquals(3, jar.getNickels());
     }
 
+    //testing setting negative nickels
+    @Test
+            (expected = IllegalArgumentException.class)
+    public void testNegNickels(){
+        ChangeJar jar = new ChangeJar(1,1,1,1);
+        jar.setNickels(-3);
+    }
+
     //testing setting pennies
     @Test
     public void testSetPennies(){
@@ -315,5 +361,13 @@ public class ChangeJarTest {
     public void testGetPennies(){
         ChangeJar jar = new ChangeJar(0,0,0,3);
         assertEquals(3, jar.getPennies());
+    }
+
+    //testing setting negative pennies
+    @Test
+            (expected = IllegalArgumentException.class)
+    public void testNegPennies(){
+        ChangeJar jar = new ChangeJar(1,1,1,1);
+        jar.setPennies(-3);
     }
 }
