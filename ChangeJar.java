@@ -50,16 +50,14 @@ public class ChangeJar {
      *    Change Jar.
      *
      * @param other is an existing Change Jar
+     * @throws throws an error if any of the other ChangeJar's
+     * coins are negative.
      */
 
     public ChangeJar(ChangeJar other) {
-        if(other.quarters >=0 && other.dimes>=0) {
+        if(other.quarters >=0 && other.dimes>=0&&other.nickels>=0 && other.pennies>=0) {
             quarters = other.quarters;
             dimes = other.dimes;
-        } else {
-            throw new IllegalArgumentException();
-        }
-        if(other.nickels>=0 && other.pennies>=0) {
             nickels = other.nickels;
             pennies = other.pennies;
         } else{
@@ -76,7 +74,8 @@ public class ChangeJar {
      * @param dimes is the number of dimes to start with.
      * @param nickels is the number of nicels to start with.
      * @param pennies is the number of pennies to start with.
-     *
+     * @throws throws exception if any of the parameters are
+     * negative.
      */
     public ChangeJar(int quarters, int dimes, int nickels, int pennies) {
         super();
@@ -96,6 +95,8 @@ public class ChangeJar {
      *      amount of change.
      *
      * @param amount is a given change amount.
+     * @throws throws exception if the parameter is
+     * less than zero.
      */
 
     public ChangeJar(double amount) {
@@ -120,6 +121,9 @@ public class ChangeJar {
      *      given string.
      *
      * @param amount is a given change amount in a string.
+     * @throws throw an error if there is a letter in the string,
+     * if the last character is a decimal, or if there are more
+     * than three digits after the decimal.
      */
 
     public ChangeJar(String amount) {
@@ -144,8 +148,6 @@ public class ChangeJar {
         amt = amt%10;
         pennies = (int) amt;
     }
-
-// REMEBER to use the Java Style Guide for the rest of your code.
 
     /******************************************************************
      *
@@ -178,10 +180,12 @@ public class ChangeJar {
      *
      * @param other is a ChangeJar.
      * @return returns whether or not the ChangeJars are equal.
+     * @throws throw an error if either the parameter is less
+     * than zero.
      */
 
     public boolean equals(ChangeJar other) {
-        if(other.getAmount()<0||this.getAmount()<0) {
+        if(other.getAmount()<0) {
             throw new IllegalArgumentException();
         }
             if (this.getAmount() == other.getAmount()) {
@@ -223,6 +227,8 @@ public class ChangeJar {
      * @param jar1 Is a ChangeJar.
      * @param jar2 Is a second ChangeJar.
      * @return returns if the ChangeJars are equal or not.
+     * @throws throw an error if either of the parameters
+     * are negative.
      */
 
     public static boolean equals(ChangeJar jar1, ChangeJar jar2) {
@@ -242,6 +248,7 @@ public class ChangeJar {
      *
      * @param other is a ChangeJar.
      * @return returns whether the ChangeJars are equal or if one is higher.
+     * @throws throw an error if other is less than zero.
      */
 
     public int compareTo(ChangeJar other) {
@@ -344,7 +351,7 @@ public class ChangeJar {
      *      from a given amount of change in the parameters.
      *
      * @param amount an amount of change.
-     * @return returns
+     * @return returns a ChangeJar with the amount taken out.
      */
 
     public ChangeJar takeOut (double amount) {
@@ -388,7 +395,7 @@ public class ChangeJar {
                     ChangeJar rtn = new ChangeJar(quarters+1,dimes+1,nickels+1,pennies+1);
                     return rtn;
         }else{
-            throw new IllegalArgumentException();
+            return null;
         }
     }
 
