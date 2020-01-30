@@ -35,13 +35,18 @@ public class ChangeJar {
 
     /******************************************************************
      *  The is the default constuctor for ChangeJar
+     * @throws throw an error if mutate is false.
      */
 
     public ChangeJar() {
-        quarters = 0;
-        dimes = 0;
-        nickels = 0;
-        pennies = 0;
+        if(mutate) {
+            quarters = 0;
+            dimes = 0;
+            nickels = 0;
+            pennies = 0;
+        }else{
+            throw new IllegalArgumentException();
+        }
     }
 
     /******************************************************************
@@ -49,20 +54,19 @@ public class ChangeJar {
      *   This constructor creates a Change Jar from an existing
      *    Change Jar.
      *
-     * @param other is an existing Change Jar
-     * @throws throws an error if any of the other ChangeJar's
-     * coins are negative.
+     * @param other is a ChangeJar
+     * @throws throw an exception if mutate is false
      */
 
     public ChangeJar(ChangeJar other) {
-        if(other.quarters >=0 && other.dimes>=0&&other.nickels>=0 && other.pennies>=0) {
-            quarters = other.quarters;
-            dimes = other.dimes;
-            nickels = other.nickels;
-            pennies = other.pennies;
-        } else{
-            throw new IllegalArgumentException();
-        }
+            if(mutate) {
+                quarters = other.quarters;
+                dimes = other.dimes;
+                nickels = other.nickels;
+                pennies = other.pennies;
+            }else{
+                throw new IllegalArgumentException();
+            }
     }
 
     /******************************************************************
@@ -74,7 +78,7 @@ public class ChangeJar {
      * @param dimes is the number of dimes to start with.
      * @param nickels is the number of nicels to start with.
      * @param pennies is the number of pennies to start with.
-     * @throws throws exception if any of the parameters are
+     * @throws throw exception if any of the parameters are
      * negative.
      */
     public ChangeJar(int quarters, int dimes, int nickels, int pennies) {
@@ -82,11 +86,14 @@ public class ChangeJar {
 
         if (quarters < 0||dimes<0 ||nickels < 0|| pennies<0)
             throw new IllegalArgumentException();
-
-        this.quarters = quarters;
-        this.dimes = dimes;
-        this.nickels = nickels;
-        this.pennies = pennies;
+        if(mutate) {
+            this.quarters = quarters;
+            this.dimes = dimes;
+            this.nickels = nickels;
+            this.pennies = pennies;
+        }else{
+            throw new IllegalArgumentException();
+        }
     }
 
     /******************************************************************
@@ -100,7 +107,7 @@ public class ChangeJar {
      */
 
     public ChangeJar(double amount) {
-        if(amount>=0){
+        if(amount>=0&& mutate){
             double amt = amount * 100;
             quarters = (int) amt / 25;
             amt = amt % 25;
@@ -122,8 +129,9 @@ public class ChangeJar {
      *
      * @param amount is a given change amount in a string.
      * @throws throw an error if there is a letter in the string,
-     * if the last character is a decimal, or if there are more
-     * than three digits after the decimal.
+     * if the last character is a decimal, if there are more
+     * than three digits after the decimal, or if the amount
+     * is negative.
      */
 
     public ChangeJar(String amount) {
@@ -139,14 +147,22 @@ public class ChangeJar {
         }
 
         double amt = Double.parseDouble(amount);
-        amt = amt * 100;
-        quarters = (int) amt/25;
-        amt = amt%25;
-        dimes = (int) amt/10;
-        amt = amt%10;
-        nickels = (int) amt/5;
-        amt = amt%10;
-        pennies = (int) amt;
+        if (amt < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        if(mutate) {
+            amt = amt * 100;
+            quarters = (int) amt / 25;
+            amt = amt % 25;
+            dimes = (int) amt / 10;
+            amt = amt % 10;
+            nickels = (int) amt / 5;
+            amt = amt % 10;
+            pennies = (int) amt;
+        }else{
+            throw new IllegalArgumentException();
+        }
     }
 
     /******************************************************************
@@ -185,9 +201,6 @@ public class ChangeJar {
      */
 
     public boolean equals(ChangeJar other) {
-        if(other.getAmount()<0) {
-            throw new IllegalArgumentException();
-        }
             if (this.getAmount() == other.getAmount()) {
                 return true;
             } else {
@@ -208,8 +221,6 @@ public class ChangeJar {
         if(other != null){
             if(other instanceof ChangeJar){
                 ChangeJar temp = (ChangeJar) other;
-                if(temp.getAmount()<0||this.getAmount()<0)
-                    throw new IllegalArgumentException();
                 if(temp.getAmount() == this.getAmount())
                     return true;
                 else
@@ -232,9 +243,6 @@ public class ChangeJar {
      */
 
     public static boolean equals(ChangeJar jar1, ChangeJar jar2) {
-        if(jar1.getAmount()<0 || jar2.getAmount()<0){
-            throw new IllegalArgumentException();
-        }
         if(jar1.getAmount() == jar2.getAmount())
             return true;
         else
@@ -252,9 +260,6 @@ public class ChangeJar {
      */
 
     public int compareTo(ChangeJar other) {
-        if(other.getAmount()<0){
-            throw new IllegalArgumentException();
-        }
         if(this.getAmount() > other.getAmount())
             return 1;
         else if(this.getAmount() < other.getAmount())
@@ -273,9 +278,6 @@ public class ChangeJar {
      */
 
     public static int compareTo(ChangeJar jar1, ChangeJar jar2)  {
-        if(jar1.getAmount()<0 || jar2.getAmount()<0){
-            throw new IllegalArgumentException();
-        }
         if(jar1.getAmount() > jar2.getAmount())
             return 1;
         else if(jar1.getAmount() < jar2.getAmount())
@@ -293,16 +295,15 @@ public class ChangeJar {
      * @param dimes the amount of dimes to take out.
      * @param nickels the amount of nickels to take out.
      * @param pennies the amount of pennies to take out.
+     * @throws throw an error if mutate is false.
      */
 
     public void takeOut(int quarters, int dimes, int nickels, int pennies) {
         if(mutate) {
             if (quarters < 0 || dimes < 0 || nickels < 0 || pennies < 0)
                 throw new IllegalArgumentException();
-            if (this.quarters < quarters || this.dimes < dimes)
-                throw new IllegalArgumentException();
 
-            if(this.nickels < nickels || this.pennies < pennies)
+            if(this.quarters <quarters || this.dimes<dimes||this.nickels<nickels||this.pennies<pennies)
                 throw new IllegalArgumentException();
 
                 this.quarters -= quarters;
@@ -322,24 +323,21 @@ public class ChangeJar {
      *     amount specified by the ChangeJar parameter.
      *
      * @param other is a ChangeJar.
+     * @throws throw an error if mutate is false or if any of the
+     * other coins are larger than the this coins.
      */
 
     public void takeOut(ChangeJar other) {
         if(mutate) {
-            if (other.getAmount() < 0)
+            if(this.quarters<other.quarters||this.dimes<other.dimes)
                 throw new IllegalArgumentException();
-
-            if (this.quarters < other.quarters || this.dimes < other.dimes)
-                    throw new IllegalArgumentException();
-
-            if(this.nickels < other.nickels || this.pennies < other.pennies)
-                    throw new IllegalArgumentException();
+            if(this.nickels<other.nickels||this.pennies<other.pennies)
+                throw new IllegalArgumentException();
 
                 this.quarters -= other.quarters;
                 this.dimes -= other.dimes;
                 this.nickels -= other.nickels;
                 this.pennies -= other.pennies;
-
         }else{
             throw new IllegalArgumentException();
         }
@@ -351,7 +349,10 @@ public class ChangeJar {
      *      from a given amount of change in the parameters.
      *
      * @param amount an amount of change.
-     * @return returns a ChangeJar with the amount taken out.
+     * @return returns a ChangeJar with the amount taken out or null
+     * if mutate is false.
+     * @throws throw an error if the parameter amount is larger than
+     * the this amount.
      */
 
     public ChangeJar takeOut (double amount) {
@@ -365,6 +366,7 @@ public class ChangeJar {
             int pennies = 0;
 
               double amt = amount * 100;
+              amt = (int) amt;
               int total = 0;
                   for(quarters = this.quarters; quarters >=0&&total!=amt; quarters--){
                       total = quarters*25;
@@ -373,11 +375,11 @@ public class ChangeJar {
                           total = quarters * 25;
                           total += dimes * 10;
                           if (total != amt) {
-                              for (nickels = this.nickels; nickels >= 0 && total != amt; nickels--) {
+                              for (nickels = this.nickels; nickels >= 0 && total != (int)amt; nickels--) {
                                   total = quarters * 25 + dimes * 10;
                                   total += nickels * 5;
                                   if(total!=amt) {
-                                      for (pennies = this.pennies; pennies >= 0 && total != amt; pennies--) {
+                                      for (pennies = this.pennies; pennies >= 0 && total != (int)amt; pennies--) {
                                           total = quarters * 25 + dimes * 10 + nickels * 5;
                                           total += pennies;
                                       }
@@ -402,6 +404,8 @@ public class ChangeJar {
     /******************************************************************
      *      Decreases the amount of pennies in the "this"
      *      ChangeJar by one.
+     * @throws throw an exception if mutate is false or
+     * if pennies would end up negative.
      */
 
     public void dec(){
@@ -418,6 +422,7 @@ public class ChangeJar {
     /******************************************************************
      *     Increases the amount of pennies in the "this"
      *     ChangeJar by one.
+     * @throws throw an error if mutate is false.
      */
 
     public void inc() {
@@ -437,6 +442,8 @@ public class ChangeJar {
      * @param dimes the amount of dimes to add.
      * @param nickels the amount of nickels to add.
      * @param pennies the amount of pennies to add.
+     * @throws throw an error if mutate is false, or if any of
+     * the parameters are negative.
      */
 
     public void add(int quarters, int dimes, int nickels, int pennies){
@@ -461,13 +468,11 @@ public class ChangeJar {
      *      parameter.
      *
      * @param other a ChangJar with amounts to add to "this" ChangeJar
+     * @throws throw an error if mutate is false.
      */
 
     public void add(ChangeJar other){
         if(mutate) {
-            if (other.quarters < 0 || other.dimes < 0 || other.nickels < 0 || other.pennies < 0)
-                throw new IllegalArgumentException();
-
             this.quarters += other.quarters;
             this.dimes += other.dimes;
             this.nickels += other.nickels;
@@ -487,7 +492,6 @@ public class ChangeJar {
 
     public String toString() {
 
-        // here is a hint
         String s = this.quarters + " Quarter" + ((quarters != 1) ? "s" : "") + "\n";
         s = s + this.dimes + " Dime" + ((dimes != 1) ? "s" : "") + "\n";
         s = s + this.nickels + " Nickel" + ((nickels != 1) ? "s" : "") + "\n";
@@ -521,6 +525,7 @@ public class ChangeJar {
      *      Loads a ChangeJar from a file.
      *
      * @param fileName the file to load from.
+     * @throws throw an error if mutate is false.
      */
 
     public void load(String fileName) {
@@ -677,10 +682,12 @@ if(mutate) {
      *      to the amount in the parameter.
      *
      *@param quarters amount of quarters to set.
+     * @throws throw an error if mutate is false or if
+     * the parameters are negative.
      */
 
     public void setQuarters(int quarters) {
-        if(quarters>=0)
+        if(quarters>=0&&mutate)
             this.quarters = quarters;
         else
             throw new IllegalArgumentException();
@@ -703,10 +710,12 @@ if(mutate) {
      *      amount in the parameter.
      *
      * @param dimes the dimes to set in "this" ChangeJar.
+     * @throws throw an error if mutate is false or if
+     * the parameters are negative.
      */
 
     public void setDimes(int dimes) {
-        if(dimes>=0)
+        if(dimes>=0&&mutate)
             this.dimes = dimes;
         else
             throw new IllegalArgumentException();
@@ -729,10 +738,12 @@ if(mutate) {
      *      the amount in the parameter.
      *
      * @param nickels the amount of nickels to set.
+     * @throws throw an error if mutate is false or
+     * if the parameter is negative.
      */
 
     public void setNickels(int nickels) {
-        if(nickels>=0)
+        if(nickels>=0&&mutate)
             this.nickels = nickels;
         else
             throw new IllegalArgumentException();
@@ -755,10 +766,12 @@ if(mutate) {
      *      specified in the parameter.
      *
      * @param pennies the amount of pennies to set.
+     * @throws throw an error if mutate is false or
+     * if the parameter is negative.
      */
 
     public void setPennies(int pennies) {
-        if(pennies>=0)
+        if(pennies>=0&&mutate)
             this.pennies = pennies;
         else
             throw new IllegalArgumentException();
