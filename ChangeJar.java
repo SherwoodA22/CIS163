@@ -12,7 +12,7 @@ import java.util.*;
  * 	 will need to comply with the Java Style Guide.
  * 	 HOWEVER,  HERE IS SOME STARTING CODE.
  *
- * @author Alek Sherwood and Matt B
+ * @author Alek Sherwood and Matt Bickham
  */
 
 public class ChangeJar {
